@@ -1,4 +1,4 @@
-from django.utils import simplejson
+import simplejson
 from django.db.models import get_model
 from django.shortcuts import get_object_or_404
 from django.forms.models import modelform_factory
