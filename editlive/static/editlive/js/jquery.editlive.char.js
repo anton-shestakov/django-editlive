@@ -48,7 +48,8 @@
         $self.value        = $self._get_value();
         $self.editlive     = $self.element.data('widget.editlive');
         $self.options      = $.extend($self.options, $self.editlive.data());
-        $self.field_name   = $self.editlive.attr('field-name'); 
+        $self.field_name   = $self.editlive.attr('field-name');
+        $self.form         = $self.options.form || null;
         $self.object_id    = $self.editlive.attr('object-id');
         $self.app_label    = $self.editlive.attr('app-label');
         $self.module_name  = $self.editlive.attr('module-name');
@@ -368,7 +369,8 @@
         $self._trigger('save', null, $self);
         Dajaxice.editlive.save($.proxy($self._saved, $self), {
             field_value:   $self.value,
-            field_name:    $self.field_name, 
+            field_name:    $self.field_name,
+            form:          $self.form,
             object_id:     $self.object_id,
             app_label:     $self.app_label,
             module_name:   $self.module_name,

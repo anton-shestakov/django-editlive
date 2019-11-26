@@ -12,13 +12,14 @@ from editlive.utils import get_adaptor, import_class
 def save(request, **kwargs):
     field_name = kwargs.get('field_name')
     field_value = kwargs.get('field_value')
+    form = kwargs.get('form')
     object_id = kwargs.get('object_id')
     app_label = kwargs.get('app_label')
     module_name = kwargs.get('module_name') # Unused ?
     field_options = kwargs.get('field_options')
     Model = get_model(app_label, module_name)
     obj = get_object_or_404(Model, pk=object_id)
-    adaptor = get_adaptor(request, obj, field_name)
+    adaptor = get_adaptor(request, obj, field_name, kwargs={'form': form})
     tpl_filters = kwargs.get('tpl_filters')
     load_tags = kwargs.get('load_tags')
 
