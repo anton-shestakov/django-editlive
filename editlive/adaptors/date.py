@@ -1,3 +1,5 @@
+import six
+
 from editlive.conf import settings
 from editlive.adaptors.base import BaseAdaptor
 
@@ -24,7 +26,7 @@ class DateAdaptor(BaseAdaptor):
             self.template_filters = []
         if not any(i.startswith('date:') for i in self.template_filters):
             self.template_filters.append(u"date:'%s'" % settings.DATE_FORMAT)
-        return unicode(super(DateAdaptor, self).render_value(value=value))
+        return six.text_type(super(DateAdaptor, self).render_value(value=value))
 
 
 class DateTimeAdaptor(BaseAdaptor):
@@ -51,7 +53,7 @@ class DateTimeAdaptor(BaseAdaptor):
             self.template_filters = []
         if not any(i.startswith('date:') for i in self.template_filters):
             self.template_filters.append(u"date:'%s'" % settings.DATETIME_FORMAT)
-        return unicode(super(DateTimeAdaptor, self).render_value(value=value))
+        return six.text_type(super(DateTimeAdaptor, self).render_value(value=value))
 
 
 class TimeAdaptor(BaseAdaptor):
@@ -72,9 +74,9 @@ class TimeAdaptor(BaseAdaptor):
             self.attributes.update({'data-type': 'charField'}) #  TODO: timeField
 
     def render_value(self, value=None):
-        return unicode(value or '')
+        return six.text_type(value or '')
 
 #   def set_value(self, value):
 #       self.field_value = value
-#       setattr(self.obj, self.get_real_field_name(), unicode(value))
+#       setattr(self.obj, self.get_real_field_name(), six.text_type(value))
 #       return value

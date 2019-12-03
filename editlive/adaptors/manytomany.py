@@ -13,6 +13,14 @@ class ManyToManyAdaptor(BaseAdaptor):
                 'data-source': '#%s' % self.attributes.get('data-field-id'),
             })
 
+    def get_value(self):
+        """Returns `self.field_value` unless it is callable. If it is
+        callable, it calls it before returning the output.
+        """
+        if callable(self.field_value):
+            return self.field_value.all()
+        return self.field_value
+
     def set_value(self, value):
         if value is None:
             self.field_value = []

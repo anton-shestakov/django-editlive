@@ -1,6 +1,8 @@
 import re
 from datetime import datetime
 
+import six
+
 from django.utils.safestring import mark_safe
 from django.forms.models import modelform_factory
 
@@ -9,8 +11,8 @@ from editlive.utils import (get_dict_from_obj, encodeURI,\
 
 
 class BaseAdaptor(object):
-    """The BaseAdaptor is an abstract class which provides all the 
-    basic methods and variable necessary to interact with and render 
+    """The BaseAdaptor is an abstract class which provides all the
+    basic methods and variable necessary to interact with and render
     an object field.
 
     It provides the following functionalities:
@@ -22,7 +24,7 @@ class BaseAdaptor(object):
     * Validate field value
     * Save a field value
 
-    .. envvar:: kwargs 
+    .. envvar:: kwargs
 
     .. note::
 
@@ -33,7 +35,7 @@ class BaseAdaptor(object):
     def __init__(self, request, field, obj, field_name, field_value='', \
             kwargs={}):
 
-        self.request = request 
+        self.request = request
         self.kwargs = kwargs
         self.field = field
         self.obj = obj
@@ -63,7 +65,7 @@ class BaseAdaptor(object):
             self.attributes = {
                 'data-type': 'livetextField',
                 'data-field-id': self.field_id,
-                'module-name': self.model._meta.module_name,
+                'module-name': self.model._meta.model_name,
                 'app-label': self.model._meta.app_label,
                 'field-name': self.field_name,
                 'object-id': self.obj.pk,
@@ -125,21 +127,21 @@ class BaseAdaptor(object):
             try:
                 form = import_class(self.kwargs.get('form'))
             except ImportError:  # TODO: warning sent to logger or something ?
-                form = modelform_factory(self.model)
+                form = modelform_factory(self.model, fields=[self.field_name])
         else:  # Generic form
-            form = modelform_factory(self.model)
+            form = modelform_factory(self.model, fields=[self.field_name])
         return form(data=get_dict_from_obj(self.obj), instance=self.obj)
 
     def get_real_field_name(self):
         """Returns the reald fieldname regardless if the field is part of a
         formset or not.
 
-        Formsets mangles fieldnames with positional slugs. This method 
+        Formsets mangles fieldnames with positional slugs. This method
         returns the actual field name without the position.
 
-        >>> print self.field_name
+        >>> print(self.field_name)
         "myfieldname_set-0"
-        >>> print self.get_real_field_name()
+        >>> print(self.get_real_field_name())
         "myfieldname"
         """
         if '_set-' in self.field_name:  # Formset field
@@ -150,7 +152,7 @@ class BaseAdaptor(object):
         return field_name
 
     def get_value(self):
-        """Returns `self.field_value` unless it is callable. If it is 
+        """Returns `self.field_value` unless it is callable. If it is
         callable, it calls it before returning the output.
         """
         if callable(self.field_value):
@@ -158,7 +160,7 @@ class BaseAdaptor(object):
         return self.field_value
 
     def set_value(self, value):
-        """Set the value of the object (but does not save it) and sets 
+        """Set the value of the object (but does not save it) and sets
         `self.field_value`.
         """
         self.field_value = value
@@ -178,7 +180,7 @@ class BaseAdaptor(object):
     def save(self):
         """Saves the object to database.
 
-        A form is created on the fly for validation purpose, but only the 
+        A form is created on the fly for validation purpose, but only the
         saved field is validated.
 
         **Successful save**
@@ -189,7 +191,7 @@ class BaseAdaptor(object):
         {'rendered_value': u'john@doe.com', 'error': False}
 
         **Validation error**
-        
+
         >>> self.set_value('Hello world')
         'Hello world'
         >>> self.save()
@@ -213,7 +215,7 @@ class BaseAdaptor(object):
                 for error in errors_field:
                     messages.append({
                         'field_name': field_name_error,
-                        'message': unicode(error)
+                        'message': six.text_type(error)
                     })
             value = self.get_value()
             return {
@@ -229,7 +231,7 @@ class BaseAdaptor(object):
 
         >>> self.render_widget()
         <editlive app-label="myapp" field-name="firstname"
-            rendered-value="John" object-id="1" data-type="charField" 
+            rendered-value="John" object-id="1" data-type="charField"
             data-field-id="id_firstname" module-name="mymodule"></editlive>
 
         """
@@ -242,14 +244,14 @@ class BaseAdaptor(object):
         >>> self.render()
         <input id="id_firstname" type="text" name="firstname" maxlength="25" />
         <editlive app-label="myapp" field-name="firstname"
-            rendered-value="John" object-id="1" data-type="charField" 
+            rendered-value="John" object-id="1" data-type="charField"
             data-field-id="id_firstname" module-name="mymodule"></editlive>
 
         """
         if not self.can_edit():
             return self.render_value()
         else:
-            field = unicode(self.form_field)
+            field = six.text_type(self.form_field)
             if self.form_field:
                 if self.kwargs.get('readonly'):
                     return self.render_value()

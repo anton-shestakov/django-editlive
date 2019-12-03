@@ -1,3 +1,5 @@
+import six
+
 from editlive.adaptors.base import BaseAdaptor
 
 
@@ -21,5 +23,5 @@ class ForeignKeyAdaptor(BaseAdaptor):
 
     def render_value(self, value=None):
         val = value or getattr(self.obj, self.get_real_field_name())
-        rendered_val = '' if val is None else unicode(val)
+        rendered_val = '' if val is None else six.text_type(val)
         return rendered_val

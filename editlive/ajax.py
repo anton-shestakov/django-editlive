@@ -1,4 +1,6 @@
 import simplejson
+import six
+
 from django.db.models import get_model
 from django.shortcuts import get_object_or_404
 from django.forms.models import modelform_factory
@@ -58,7 +60,7 @@ def save_form(request, **kwargs):
             for error in errors_field:
                 messages.append({
                     'field_name': field_name_error,
-                    'message': unicode(error)
+                    'message': six.text_type(error)
                 })
 
         out = {'error': True, 'messages': messages}
@@ -114,8 +116,8 @@ def delete_objects(request, **kwargs):
 #            oldval = field.get('value', 'None')
 #            newval = adaptor.get_value()
 #
-#            if unicode(oldval) != unicode(newval):
-#                print unicode(newval) == unicode('None')
+#            if six.text_type(oldval) != six.text_type(newval):
+#                print six.text_type(newval) == six.text_type('None')
 #                print "%s!=%s (CHANGED)" % (oldval, newval)
 #           #else:
 #           #    print "%s==%s" % (oldval, newval)

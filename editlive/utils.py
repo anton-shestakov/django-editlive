@@ -2,6 +2,7 @@
 import re
 import collections
 import urllib
+import six
 
 from django import template
 from django.db import models
@@ -165,4 +166,4 @@ def encodeURI(uri):
     We really only need to escape " (double quotes) and non-ascii characters..
     """
     s = u"""!#$&'()*+,-./:;<=>?@[\]^_{|}~ """
-    return urllib.quote(unicode(uri).encode('utf8'), safe=s.encode('ascii'))
+    return urllib.quote(six.text_type(uri).encode('utf8'), safe=s.encode('ascii'))
