@@ -108,7 +108,7 @@ def get_adaptor(request, obj, field_name, field_value=None, kwargs={}, adaptor=N
             manager, pos, field_name = filter(None, \
                     re.split(r'(\w+)_set-(\d+)-(\w+)', field_name))
 
-        field = obj._meta.get_field_by_name(field_name)[0]
+        field = obj._meta.get_field(field_name)
         if adaptor is None:
             adaptor = get_default_adaptor(field)
         path_module, class_adaptor = ('.'.join(adaptor.split('.')[:-1]), \
