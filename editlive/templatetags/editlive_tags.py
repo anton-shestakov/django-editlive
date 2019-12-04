@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import logging
 from django import template
-from django.utils.log import getLogger
 from django.template import Variable, VariableDoesNotExist
 #from django.conf import settings
 
@@ -9,7 +9,7 @@ from django.template import Variable, VariableDoesNotExist
 from editlive.utils import get_adaptor
 
 register = template.Library()
-logger = getLogger('django')
+logger = logging.getLogger('django')
 
 
 @register.assignment_tag(takes_context=True)

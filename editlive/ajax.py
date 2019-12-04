@@ -1,9 +1,9 @@
 import simplejson
 import six
 
-from django.db.models import get_model
-from django.shortcuts import get_object_or_404
+from django.apps import apps
 from django.forms.models import modelform_factory
+from django.shortcuts import get_object_or_404
 
 from dajaxice.decorators import dajaxice_register
 
@@ -19,7 +19,7 @@ def save(request, **kwargs):
     app_label = kwargs.get('app_label')
     module_name = kwargs.get('module_name') # Unused ?
     field_options = kwargs.get('field_options')
-    Model = get_model(app_label, module_name)
+    Model = apps.get_model(app_label, module_name)
     obj = get_object_or_404(Model, pk=object_id)
     adaptor = get_adaptor(request, obj, field_name, kwargs={'form': form})
     tpl_filters = kwargs.get('tpl_filters')
@@ -38,7 +38,7 @@ def save(request, **kwargs):
 @dajaxice_register(method='POST')
 def save_form(request, **kwargs):
     meta = kwargs.get('meta')
-    model = get_model(*meta.get('model').split('.'))
+    model = apps.get_model(*meta.get('model').split('.'))
     fkwargs = {}
 
     if meta.get('formClass'):
@@ -74,7 +74,7 @@ def delete_objects(request, **kwargs):
     object_list = kwargs['objects']
     app_label = kwargs['meta'].get('appLabel')
     module_name = kwargs['meta'].get('moduleName')
-    Model = get_model(app_label, module_name)
+    Model = apps.get_model(app_label, module_name)
     out = {
         'error': False,
         'object_list': object_list,
@@ -100,7 +100,7 @@ def delete_objects(request, **kwargs):
 #    rs = {}
 #    for model in kwargs:
 #        ids = list(set([x['object_id'] for x in kwargs[model]]))
-#        rs[model] = get_model(*model.split('.')).objects.filter(pk__in=ids)
+#        rs[model] = apps.get_model(*model.split('.')).objects.filter(pk__in=ids)
 #
 #    # Then we correlate the data and send back only what
 #    # has changed
