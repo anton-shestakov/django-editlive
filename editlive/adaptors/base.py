@@ -281,7 +281,7 @@ class BaseInlineAdaptor(object):
         # fix this shit..
         # http://stackoverflow.com/questions/12462616/
         # finding-the-relation-field-of-a-related-object-in-django
-        self.query_field = self.manager.core_filters.keys()[0].split('__')[0]
+        self.query_field = list(self.manager.core_filters.keys())[0].split('__')[0]
         self.form_class = self.get_form()
         self.initial = initial
         self.initial[self.query_field] = obj.pk

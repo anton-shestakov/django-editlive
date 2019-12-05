@@ -130,12 +130,13 @@ def is_managed_field(obj, fieldname):
 
 def get_dict_from_obj(obj):
     obj_dict = obj.__dict__
-    obj_dict_result = obj_dict.copy()
-    for key, value in obj_dict.items():
+    obj_dict_result = {}
+    for key, value in list(obj_dict.items()):
         if '_id' in key and is_managed_field(obj, key.replace('_id', '')):
             key2 = key.replace('_id', '')
-            obj_dict_result[key2] = obj_dict_result[key]
-            del obj_dict_result[key]
+            obj_dict_result[key2] = value
+        else:
+            obj_dict_result[key] = value
     manytomany_list = obj._meta.many_to_many
     for manytomany in manytomany_list:
         val = manytomany.value_from_object(obj)
@@ -166,4 +167,4 @@ def encodeURI(uri):
     We really only need to escape " (double quotes) and non-ascii characters..
     """
     s = u"""!#$&'()*+,-./:;<=>?@[\]^_{|}~ """
-    return urllib.quote(six.text_type(uri).encode('utf8'), safe=s.encode('ascii'))
+    return six.moves.urllib_parse.quote(six.text_type(uri).encode('utf8'), safe=s.encode('ascii'))
