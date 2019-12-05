@@ -12,7 +12,7 @@ register = template.Library()
 logger = logging.getLogger('django')
 
 
-@register.assignment_tag(takes_context=True)
+@register.simple_tag(takes_context=True)
 def editlive(context, context_variable, **kwargs):
     try:
         field_value = Variable(context_variable).resolve(context)

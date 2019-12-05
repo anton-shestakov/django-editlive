@@ -79,7 +79,7 @@ class BaseAdaptor(object):
                     self.load_tags = self.kwargs.get('load_tags').split('|')
 
     def can_edit(self):
-        return self.request.user.is_authenticated()
+        return self.request.user.is_authenticated
 
     def format_attributes(self):
         """Formats the HTML attributes of the <editlive /> element.
