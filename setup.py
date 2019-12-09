@@ -15,7 +15,7 @@ def read(fname):
 
 
 install_requires = [
-    'Django>=1.5,<1.9',
+    'Django>=1.11,<3.0',
     'simplejson',
     'django-dajaxice',
 ]

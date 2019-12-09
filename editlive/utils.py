@@ -2,6 +2,9 @@
 import re
 import collections
 import urllib
+
+from importlib import import_module as py_import_module
+
 import six
 
 from django import template
@@ -30,8 +33,7 @@ blob/master/inplaceeditform/commons.py
 
 def import_module(name, package=None):
     try:
-        from django.utils.importlib import import_module
-        return import_module(name, package)
+        return py_import_module(name, package)
     except ImportError:
         path = [m for m in name.split('.')]
         return __import__(name, {}, {}, path[-1])
@@ -103,7 +105,6 @@ def get_adaptor(request, obj, field_name, field_value=None, kwargs={}, adaptor=N
         return Adaptor(request, obj, field_name, field_value, kwargs=kwargs)
 
     else:  # Vanilla field
-
         if '_set-' in field_name:  # Formset field
             manager, pos, field_name = filter(None, \
                     re.split(r'(\w+)_set-(\d+)-(\w+)', field_name))
@@ -114,9 +115,8 @@ def get_adaptor(request, obj, field_name, field_value=None, kwargs={}, adaptor=N
         path_module, class_adaptor = ('.'.join(adaptor.split('.')[:-1]), \
                                         adaptor.split('.')[-1])
         Adaptor = getattr(import_module(path_module), class_adaptor)
-
-        return Adaptor(request, field, obj, field_name, \
-                field_value=field_value, kwargs=kwargs)
+        return Adaptor(request, field, obj, field_name,
+                       field_value=field_value, kwargs=kwargs)
 
 
 def is_managed_field(obj, fieldname):
@@ -144,7 +144,6 @@ def get_dict_from_obj(obj):
             ids = [obj_rel.id for obj_rel in val]
             if ids:
                 obj_dict_result[manytomany.name] = ids
-
     return obj_dict_result
 
 

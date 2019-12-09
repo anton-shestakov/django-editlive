@@ -32,9 +32,8 @@ class BaseAdaptor(object):
 
     """
 
-    def __init__(self, request, field, obj, field_name, field_value='', \
-            kwargs={}):
-
+    def __init__(self, request, field, obj, field_name, field_value='',
+                 kwargs={}):
         self.request = request
         self.kwargs = kwargs
         self.field = field

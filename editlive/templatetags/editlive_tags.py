@@ -34,9 +34,9 @@ def editlive(context, context_variable, **kwargs):
                                             .resolve(context)
             except VariableDoesNotExist:
                 kwargs['field-index'] = 0
-
-        adaptor = get_adaptor(request, context_obj, field_name, field_value=field_value,\
-                                kwargs=kwargs, adaptor=adaptor_str)
+        adaptor = get_adaptor(
+            request, context_obj, field_name, field_value=field_value,
+            kwargs=kwargs, adaptor=adaptor_str)
         return adaptor.render()
     except VariableDoesNotExist:
         logger.warning("editlive: the template variable \"%s\" doesn't exists." % context_variable)
