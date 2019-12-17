@@ -17,8 +17,7 @@ class ForeignKeyAdaptor(BaseAdaptor):
 
     def set_value(self, value):
         self.field_value = value
-        setattr(self.obj, '%s_id' % \
-                self.get_real_field_name(), self.field_value)
+        setattr(self.obj, '%s_id' % self.get_real_field_name(), self.field_value)
         return self.field_value
 
     def render_value(self, value=None):

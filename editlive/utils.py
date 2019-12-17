@@ -8,12 +8,17 @@ from importlib import import_module as py_import_module
 import six
 
 from django import template
-from django.db import models
 from django.conf import settings
-from django.forms import ModelForm
+from django.core.exceptions import FieldDoesNotExist
+from django.db import models
 from django.db.models.fields.related import ForeignKey, ManyToManyField
+from django.forms import ModelForm
 
 from editlive.conf import settings as editlive_settings
+
+
+def get_opts(model):
+    return model._meta
 
 
 def get_dynamic_modelform(**kwargs):
@@ -106,26 +111,30 @@ def get_adaptor(request, obj, field_name, field_value=None, kwargs={}, adaptor=N
 
     else:  # Vanilla field
         if '_set-' in field_name:  # Formset field
-            manager, pos, field_name = filter(None, \
-                    re.split(r'(\w+)_set-(\d+)-(\w+)', field_name))
+            manager, pos, field_name = filter(
+                None, re.split(r'(\w+)_set-(\d+)-(\w+)', field_name))
 
-        field = obj._meta.get_field(field_name)
+        field = get_opts(obj).get_field(field_name)
         if adaptor is None:
             adaptor = get_default_adaptor(field)
-        path_module, class_adaptor = ('.'.join(adaptor.split('.')[:-1]), \
-                                        adaptor.split('.')[-1])
+        path_module, class_adaptor = ('.'.join(adaptor.split('.')[:-1]),
+                                      adaptor.split('.')[-1])
         Adaptor = getattr(import_module(path_module), class_adaptor)
         return Adaptor(request, field, obj, field_name,
                        field_value=field_value, kwargs=kwargs)
 
 
 def is_managed_field(obj, fieldname):
-    if hasattr(obj, fieldname):
-        field = getattr(obj, fieldname)
-        if hasattr(field, '_meta'):
-            meta = getattr(field, '_meta')
-            return meta.managed
-    return False
+    opts = get_opts(obj)
+    try:
+        field = opts.get_field(fieldname)
+    except FieldDoesNotExist:
+        return False
+    try:
+        related_model = field.related_model
+        return get_opts(related_model).managed
+    except AttributeError:
+        return False
 
 
 def get_dict_from_obj(obj):
@@ -137,7 +146,7 @@ def get_dict_from_obj(obj):
             obj_dict_result[key2] = value
         else:
             obj_dict_result[key] = value
-    manytomany_list = obj._meta.many_to_many
+    manytomany_list = get_opts(obj).many_to_many
     for manytomany in manytomany_list:
         val = manytomany.value_from_object(obj)
         if isinstance(val, collections.Iterable):
