@@ -27,5 +27,5 @@ class ManyToManyAdaptor(BaseAdaptor):
             getattr(self.obj, self.field_name).clear()
         else:
             self.field_value = value
-            setattr(self.obj, self.field_name, value)
+            getattr(self.obj, self.field_name).set(value)
         return value

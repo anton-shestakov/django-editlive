@@ -203,11 +203,11 @@ class BaseAdaptor(object):
         # We do not validate the whole form as it lead to conflicts
         if len(field.errors) == 0:
             self.obj.save()
-            val = getattr(self.obj, self.field_name)
+            val = self.get_value()
             rendered_value = self.render_value(val)
             return {
                 'error': False,
-                'rendered_value': self.render_value(val)}
+                'rendered_value': rendered_value}
         else:
             messages = []
             for field_name_error, errors_field in form.errors.items():

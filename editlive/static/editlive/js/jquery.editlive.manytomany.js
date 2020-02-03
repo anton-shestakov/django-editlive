@@ -26,8 +26,7 @@
             };
 
             $self.options.select = function(e, ui) {
-                $self._add_item(ui.item.value)
-                $self.blur();
+                $self._add_item(ui.item.value);
                 $self.input.val('');
                 return false;
             };
@@ -45,7 +44,7 @@
         };
 
         if ($self.options.width) {
-            var chim = parseInt($self.input.css('padding-left').match(/\d+/)[0], 10) 
+            var chim = parseInt($self.input.css('padding-left').match(/\d+/)[0], 10)
                        + parseInt($self.input.css('padding-right').match(/\d+/)[0], 10);
             $self.input.css('width', parseInt($self.options.width, 10) - chim);
         }
@@ -58,8 +57,8 @@
             p = el.parent(),
             val = p.data('value');
 
-        $.each(this._get_value(), function(k, v) { 
-            if (v != val) newval.push(v); 
+        $.each(this._get_value(), function(k, v) {
+            if (v !== val) newval.push(v);
         });
 
         this._set_value(newval);
@@ -74,6 +73,7 @@
             label = this.element.find('option[value="'+ v +'"]').text();
         val.push(v);
         this._set_value(val);
+        this.change();
         this._create_list_item(label, v);
     };
 
@@ -93,7 +93,7 @@
             out = [];
         $self.selectedList = $('<ul class="editlive editlive-m2m" />');
         $self.selectedList.hide().insertBefore($self.input).width($self.input.width());
-        $self.sourceSelect.find('option').each(function(){ 
+        $self.sourceSelect.find('option').each(function(){
             if ($(this).is(':selected')) {
                 var s = {label: $(this).text(), value: $(this).val()}
                 $self._create_list_item(s.label, s.value);

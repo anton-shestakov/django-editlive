@@ -32,12 +32,12 @@
     };
 
     /**
-     * The widget factory automatically fires the _create() and _init() methods 
-     * during initialization, in that order. At first glance it appears that the 
-     * effort is duplicated, but there is a sight difference between the two. 
-     * Because the widget factory protects against multiple instantiations on the 
-     * same element, _create() will be called a maximum of one time for each widget 
-     * instance, whereas _init() will be called each time the widget is called 
+     * The widget factory automatically fires the _create() and _init() methods
+     * during initialization, in that order. At first glance it appears that the
+     * effort is duplicated, but there is a sight difference between the two.
+     * Because the widget factory protects against multiple instantiations on the
+     * same element, _create() will be called a maximum of one time for each widget
+     * instance, whereas _init() will be called each time the widget is called
      * without arguments...
      *
      * @class _create
@@ -65,13 +65,13 @@
         }
 
         if ($self.options.width) {
-            var chim = parseInt($self.element.css('padding-left').match(/\d+/)[0], 10) 
+            var chim = parseInt($self.element.css('padding-left').match(/\d+/)[0], 10)
                        + parseInt($self.element.css('padding-right').match(/\d+/)[0], 10);
             $self.element.css('width', $self.options.width - chim);
         }
 
         $self.element.hide().wrap($self.control);
-        
+
         // For odd reasons, jQuery seems its lose the DOM sync once a node is wrapped.
         $self.control = $self.element.parent();
 
@@ -99,7 +99,7 @@
         var $self = this;
         $self._createPlaceholder();
         if ($self.options.width) {
-            var chim = parseInt($self.placeholder.css('padding-left').match(/\d+/)[0], 10) 
+            var chim = parseInt($self.placeholder.css('padding-left').match(/\d+/)[0], 10)
                        + parseInt($self.placeholder.css('padding-right').match(/\d+/)[0], 10);
             $self.placeholder.css('width', $self.options.width - chim);
         }
@@ -119,7 +119,7 @@
     charField._set_value = function(v) {
         this.value = v;
         this.element.val(v);
-        return v;       
+        return v;
     };
 
     charField._highlight = function(){
@@ -130,12 +130,12 @@
 
         if ($.effects.highlight) {
             var el = $self.placeholder || $self.element;
-            el.animate({backgroundColor: startColor}, 
+            el.animate({backgroundColor: startColor},
                 $self.options.highlight.duration / 2,
                 function() {
                     setTimeout(function(){
                         try {
-                            el.animate({backgroundColor: endColor}, 
+                            el.animate({backgroundColor: endColor},
                                 $self.options.highlight.duration / 2);
                         } catch(e) {
                             // This will happen when the initial background color is transparent
@@ -183,7 +183,7 @@
         if (width < this.option.minwidth) width = this.option.minwidth;
         if (width < 0) width = 'none';
         // Account for input-append/prepend
-        if (width != 'none' && width > 46) { 
+        if (width != 'none' && width > 46) {
             if (this.options.input_append.length) {
                 width = width - 27;
             }
@@ -278,12 +278,12 @@
         // some instance randomly.
         //
         // Another approach would be to use a request queue system
-        // which would buffer save requests and clobber them in a 
+        // which would buffer save requests and clobber them in a
         // single request them if they are made at short interval.
         //
-        // As now I don't have time to investigate the second 
+        // As now I don't have time to investigate the second
         // approach, I need to go for the quick, easy and solid
-        // solution. 
+        // solution.
         $('html').trigger('click');
 
         $self._trigger('focus', null, $self)
@@ -299,7 +299,7 @@
             $self.blur();
         }
         // Value has changed, save
-        else if ($self.value != $self._get_value()) {
+        else if (JSON.stringify($self.value) !== JSON.stringify($self._get_value())) {
             $self.value = $self._get_value();
             $self.change();
         }
@@ -402,7 +402,7 @@
     // Clean up any modifications made to the DOM
     charField.destroy = function() {
         var $self = this;
-        // In jQuery UI 1.9 and above, you would define _destroy instead of 
+        // In jQuery UI 1.9 and above, you would define _destroy instead of
         // destroy and not call the base method
         $.Widget.prototype.destroy.call($self);
         $self.element.show();
